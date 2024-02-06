@@ -13,7 +13,8 @@ config.read('configuration.ini')
 # Move values later to configuration file
 kafka_config = {
     "bootstrap_servers": config.get("Kafka", "bootstrap_servers"),
-    "client_id": config.get("Kafka", "client_id")
+    "client_id": config.get("Kafka", "client_id"),
+    "api_version": config.get("Kafka", "api_version"),
 }
 
 # Define Kafka Topic
@@ -29,6 +30,7 @@ try:
     while True:
         event = Event()
         event_json = event.to_json()
+        print(f"Producing event: {event}")
 
         # Produce the event to kafka
         producer.send(kafka_topic, key=str(event.reporter_id), value=event_json)
@@ -38,7 +40,7 @@ try:
 
         # wait 1 second before producing the next event
         time.sleep(config.getint("Event", "sleep_time_seconds"))
-except KeyboardInterrupt:
-    pass
+except Exception as e:
+    print(f"Error in Kafka producer: {e}")
 finally:
     producer.close()

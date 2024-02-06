@@ -21,3 +21,19 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  
+  kafka_producer:
+  build:
+    context: ./kafka_producer
+  depends_on:
+    - kafka
+  volumes:
+    - ./configuration.ini:/configuration.ini
+
+kafka_consumer:
+  build:
+    context: ./kafka_consumer
+  depends_on:
+    - kafka
+  volumes:
+    - ./configuration.ini:/configuration.ini
