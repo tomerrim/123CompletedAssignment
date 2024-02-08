@@ -19,3 +19,8 @@ MongoDB:
   mongodb_uri: "mongodb://mongo"
   db_name: "KafkaEvents"
   collection_name: "Events"
+
+Redis:
+  host: "redis"
+  port: 6379
+  sleep_time_seconds: 30
