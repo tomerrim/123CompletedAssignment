@@ -1,29 +1,23 @@
 import json
 import time
-import configparser
 from kafka import KafkaProducer
 from event import Event
+from config_loader import config
 
-
-# Read configuration from configuration.ini file
-config = configparser.ConfigParser()
-config.read('configuration.ini')
 
 # Define Kafka Topic
-kafka_topic = config.get("Kafka", "topic")
+kafka_topic = config["Kafka"]["topic"]
 
 # Create Kafka producer instance
 producer = KafkaProducer(
-    bootstrap_servers=config.get("Kafka", "bootstrap_servers"),
+    bootstrap_servers=config["Kafka"]["bootstrap_servers"],
     value_serializer=lambda v: json.dumps(v).encode("utf-8"),
-    api_version=tuple(
-        map(int, config.get("Kafka", "api_version").strip("()").split(","))
-    ),
-    client_id=config.get("Kafka", "client_id"),
+    client_id=config["Kafka"]["client_id"],
+    api_version=tuple(map(int, config["Kafka"]["api_version"].strip("()").split(","))),
 )
 
 # Initialize reporter_id
-global_reporter_id = config.getint("Event", "initial_reporter_id")
+global_reporter_id = config["Event"]["initial_reporter_id"]
 
 try:
     while True:
@@ -37,11 +31,10 @@ try:
         producer.flush()
 
         # Increment reporter_id for the next event
-        global_reporter_id += config.getint("Event", "reporter_id_increment")
-        print(f"reporter_id: {global_reporter_id}")
+        global_reporter_id += config["Event"]["reporter_id_increment"]
 
         # wait 1 second before producing the next event
-        time.sleep(config.getint("Event", "sleep_time_seconds"))
+        time.sleep(config["Event"]["sleep_time_seconds"])
 except Exception as e:
     print(f"Error in Kafka producer: {e}")
 finally:

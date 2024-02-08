@@ -31,7 +31,7 @@ services:
     depends_on:
       - kafka
     volumes:
-      - ./configuration.ini:/app/configuration.ini
+      - ./configuration.yaml:/app/configuration.yaml
 
   kafka-consumer:
     build:
@@ -40,7 +40,7 @@ services:
       - kafka
       - mongo
     volumes:
-      - ./configuration.ini:/app/configuration.ini
+      - ./configuration.yaml:/app/configuration.yaml
 
   mongo:
     image: mongo:latest

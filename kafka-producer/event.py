@@ -1,20 +1,15 @@
 from datetime import datetime
 from random import randint
 import json
-import configparser
-
-
-# Read configuration from configuration.ini file
-config = configparser.ConfigParser()
-config.read("configuration.ini")
+from config_loader import config
 
 class Event:
     def __init__(self):
-        self.reporter_id = config.getint("Event", "initial_reporter_id")
+        self.reporter_id = config["Event"]["initial_reporter_id"]
         self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.metric_id = randint(config.getint("Event", "min_metric_id"), config.getint("Event", "max_metric_id"))
-        self.metric_value = randint(config.getint("Event", "min_metric_id"), config.getint("Event", "max_metric_value"))
-        self.message = config.get("Event", "message")
+        self.metric_id = randint(config["Event"]["min_metric_id"], config["Event"]["max_metric_id"])
+        self.metric_value = randint(config["Event"]["min_metric_id"], config["Event"]["max_metric_value"])
+        self.message = config["Event"]["message"]
 
     def to_json(self):
         """
