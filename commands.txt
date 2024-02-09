@@ -1,0 +1,43 @@
+# Build Kafka Container
+docker-compose build kafka
+
+# Create Topic in Kafka
+docker exec -it kafka kafka-topics --create --topic events --bootstrap-server kafka:9092 --partitions 1 --replication-factor 1
+
+# Run the Producer
+docker-compose up -d kafka-producer
+
+# Prove that there is data on topic using Kafka tool
+docker exec -it kafka kafka-console-consumer --topic events --from-beginning --bootstrap-server kafka:9092 --timeout-ms 10000
+
+# Run Mongo
+docker-compose up -d mongo
+
+# Create Collection in Mongo (if necessary)
+# Note: This step is usually handled by your application
+
+# Run Consumer
+docker-compose up -d kafka-consumer
+
+# Show that there is data in Mongo (use MongoDB client or Compass)
+
+# Run Redis
+docker-compose up -d redis
+
+# Run Redis-ETL
+docker-compose up -d redis-etl
+
+# Show that there is data on Redis
+docker exec -it redis redis-cli KEYS '*'
+
+# clear data on redis
+docker exec -it redis redis-cli FLUSHDB 
+
+# Stop Redis ETL
+docker-compose stop redis-etl
+
+# Run Redis ETL Again
+docker-compose up -d redis-etl
+
+# Show that the ETL continues from where it stopped
+docker exec -it redis redis-cli KEYS '*'
