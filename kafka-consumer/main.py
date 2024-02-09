@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from pymongo import MongoClient
 from config_loader import config
+from logger import logger
 
 
 # Kafka consumer configuration
@@ -21,6 +22,9 @@ client = MongoClient(mongo_uri)
 db = client[mongo_db_name]
 events_collection = db[mongo_collection_name]
 
+timestamp_format = config["Event"]["timestamp_format"]
+timestamp = config["Event"]["timestamp"]
+
 # Create Kafka consumer
 consumer = KafkaConsumer(
     kafka_topic,
@@ -37,13 +41,14 @@ try:
         print("Received message:", event)
 
         # Convert timestamp string to datetime object
-        event['timestamp'] = datetime.strptime(event['timestamp'], '%Y-%m-%d %H:%M:%S')
+        event[timestamp] = datetime.strptime(event[timestamp], timestamp_format)
 
         # Insert event into MongoDB
         events_collection.insert_one(event)
         print(f"inserted to {events_collection}")
 except Exception as e:
     print(f"Error in Kafka consumer or MongoDB insertion: {e}")
+    logger.exception(f"Error in Kafka consumer or MongoDB insertion: {e}")
 finally:
     consumer.close()
     client.close()

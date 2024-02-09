@@ -3,6 +3,7 @@ import time
 from kafka import KafkaProducer
 from event import Event
 from config_loader import config
+from logger import logger
 
 
 # Define Kafka Topic
@@ -28,6 +29,8 @@ try:
 
         # Produce the event to kafka
         producer.send(kafka_topic, event_json)
+
+        # Flush the producer to ensure all messages are sent to Kafka before continuing
         producer.flush()
 
         # Increment reporter_id for the next event
@@ -37,5 +40,6 @@ try:
         time.sleep(config["Event"]["sleep_time_seconds"])
 except Exception as e:
     print(f"Error in Kafka producer: {e}")
+    logger.exception(f"Error in Kafka producer: {e}")
 finally:
     producer.close()

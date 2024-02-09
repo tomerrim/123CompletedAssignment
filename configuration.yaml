@@ -3,7 +3,7 @@ Event:
   max_metric_id: 10
   max_metric_value: 100
   timestamp_format: "%Y-%m-%d %H:%M:%S"
-  timestamp: timestamp
+  timestamp: "timestamp"
   message: "HELLO WORLD"
   initial_reporter_id: 0
   reporter_id_increment: 1

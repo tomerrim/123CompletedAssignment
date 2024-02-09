@@ -2,6 +2,7 @@ from datetime import datetime
 from random import randint
 import json
 from config_loader import config
+from logger import logger
 
 class Event:
     def __init__(self):
@@ -26,7 +27,8 @@ class Event:
                 "metricValue": self.metric_value,
                 "message": self.message,
             }
-            
+
         except json.JSONDecodeError as e:
             # Handle JSON serialization errors
+            logger.exception(f"Error converting Event to JSON: {e}")
             raise RuntimeError(f"Error converting Event to JSON: {e}")
