@@ -8,6 +8,7 @@ Event:
   initial_reporter_id: 0
   reporter_id_increment: 1
   sleep_time_seconds: 1
+  asc_order: 1
 
 Kafka:
   bootstrap_servers: "kafka:9092"

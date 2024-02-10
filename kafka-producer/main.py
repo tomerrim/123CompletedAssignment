@@ -24,11 +24,11 @@ try:
     while True:
         event = Event()
         event.reporter_id = global_reporter_id
-        event_json = event.to_json()
-        print(f"Producing event: {event_json}")
+        event_dict = event.to_dict()
+        print(f"Producing event: {event_dict}")
 
         # Produce the event to kafka
-        producer.send(kafka_topic, event_json)
+        producer.send(kafka_topic, event_dict)
 
         # Flush the producer to ensure all messages are sent to Kafka before continuing
         producer.flush()
@@ -42,4 +42,5 @@ except Exception as e:
     print(f"Error in Kafka producer: {e}")
     logger.exception(f"Error in Kafka producer: {e}")
 finally:
+    # Close the Kafka producer to release resources and flush any remaining messages
     producer.close()
